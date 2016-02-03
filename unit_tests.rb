@@ -2,15 +2,15 @@ require 'test/unit'
 require_relative 'processor'
 
 class TestProcessor < Test::Unit::TestCase
-  def test_extract_sequences_from_word
+  def test_all_sequences
     pro = Processor.new("dictionary.txt", "sequence_list.txt")
-    short_seqs = pro.extract_sequences_from_word "abc"
-    assert_equal [], short_seqs
+    short_sequences = pro.all_sequences("abc")
+    assert_equal [], short_sequences
 
-    seqs = pro.extract_sequences_from_word "hello"
+    sequences = pro.all_sequences "hello"
 
-    assert_equal "hell", seqs.first
-    assert_equal "ello", seqs.last
+    assert_equal "hell", sequences.first
+    assert_equal "ello", sequences.last
   end
 
   def test_get_words_from_file
@@ -24,16 +24,19 @@ class TestProcessor < Test::Unit::TestCase
     assert_nil words.detect{ |w| w.length == 0 }
   end
 
-  # def test_identify_duplicate_sequences
+  # def test_select_unique_sequences
   #   pro = Processor.new("dictionary.txt", "sequence_list.txt")
-  #   list = ['word', 'word', 'word', 'help']
   #
-  #   duplicates = pro.identify_duplicate_sequences list
-  #   assert_equal ['word'], duplicates
+  #   pro.pairs_hash = list
   #
-  #   list2 = ['aaaa', 'bbbb', 'cccc']
-  #   duplicates2 = pro.identify_duplicate_sequences list2
-  #   assert_equal [], duplicates2
+  #   list = {"arro" => ["arrow", "carrot"], "mike" => ["bron"]}
+  #
+  #   uniques = pro.select_unique_sequences
+  #   assert_equal {"mike" => ["bron"]}, uniques
+
+    # list2 = ['aaaa', 'bbbb', 'cccc']
+  #   # duplicates2 = pro.select_unique_sequences list2
+  #   # assert_equal [], duplicates2
   # end
 
   # def test_create_sequence_word_pairs

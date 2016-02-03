@@ -1,10 +1,12 @@
+require 'pry'
+
 class Processor
 	# Omit strings less than 4 characters and extract the 4-letter
 	# sequences from the other strings.
     def extract_sequences_from_original_word original_word
         return [] if original_word.length < 4
         sequences = []
-		
+
         while original_word.length > 3
             four_letter_seq = original_word[0..3]
             sequences << four_letter_seq
@@ -14,11 +16,11 @@ class Processor
 
         return sequences
     end
-	
+
     def load_dictionary input_filename
       File.read(input_filename).strip.split
     end
-	
+
 	# Find multiples within the 4-letter sequence list.
     def identify_duplicate_sequences sequences
         sequences.select { |e| sequences.count(e) > 1 }.uniq
@@ -38,7 +40,7 @@ class Processor
     def alphabetize_pairs_by_seq pair_list
       pair_list.sort_by{ |seq, original|  seq.downcase  }
     end
-	
+
     # Pairing up every 4-letter sequence with the word it
     # was derived from.
     def create_sequence_word_pairs dict_words
@@ -55,13 +57,13 @@ class Processor
 
         pairs_array
     end
-	
+
 	# Sorting the list and removing duplicates.
 	def sanitize_pair_list pairs_array
 		without_duplicates = remove_unwanted_duplicates pairs_array
 		alphabetize_pairs_by_seq(without_duplicates)
 	end
-	
+
 	# Creating the final 2-column list.
     def list_creator dict_filename, output_filename
         originals = load_dictionary dict_filename
