@@ -34,9 +34,11 @@ class TestProcessor < Test::Unit::TestCase
 
     assert_kind_of(Hash, pro.pairs_hash)
 
-    pro.pairs_hash.each { |sequence, word_array| assert_kind_of String, sequence }
-    pro.pairs_hash.each { |sequence, word_array| assert_kind_of Array, word_array }
-    pro.pairs_hash.each { |sequence, word_array| assert_operator word_array.length, :>=, 1 }
+    pro.pairs_hash.each do |sequence, word_array|
+      assert_kind_of String, sequence
+      assert_kind_of Array, word_array
+      assert_operator word_array.length, :>=, 1
+    end
   end
 
   def test_alphabetize_pairs_by_sequence
@@ -48,7 +50,9 @@ class TestProcessor < Test::Unit::TestCase
 
     assert_kind_of(Array, pro.pairs_array)
 
-    pro.pairs_array.each { |sequence_word_pair| assert_kind_of Array, sequence_word_pair }
-    pro.pairs_array.each { |sequence_word_pair| assert_equal 2, sequence_word_pair.length }
+    pro.pairs_array.each do |sequence_word_pair|
+      assert_kind_of Array, sequence_word_pair
+      assert_equal 2, sequence_word_pair.length
+    end
   end
 end
