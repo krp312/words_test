@@ -53,6 +53,8 @@ class TestProcessor < Test::Unit::TestCase
     pro.pairs_array.each do |sequence_word_pair|
       assert_kind_of Array, sequence_word_pair
       assert_equal 2, sequence_word_pair.length
+      assert_kind_of String, sequence_word_pair[0]
+      assert_kind_of String, sequence_word_pair[1]
     end
   end
 end
