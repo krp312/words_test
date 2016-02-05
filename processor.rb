@@ -1,5 +1,8 @@
 class Processor
 
+  attr_reader :pairs_hash
+  attr_reader :pairs_array
+
   def initialize(input_filename, output_filename)
     @dictionary = get_words_from_file(input_filename)
     @output_filename = output_filename
@@ -66,5 +69,4 @@ class Processor
   def quote_string(s)
     '' + s + ''
   end
-
 end

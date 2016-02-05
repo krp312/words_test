@@ -4,60 +4,51 @@ require_relative 'processor'
 class TestProcessor < Test::Unit::TestCase
   def test_all_sequences
     pro = Processor.new("dictionary.txt", "sequence_list.txt")
+
     short_sequences = pro.all_sequences("abc")
-    assert_equal [], short_sequences
 
-    sequences = pro.all_sequences "hello"
+    assert_equal([], short_sequences)
 
-    assert_equal "hell", sequences.first
-    assert_equal "ello", sequences.last
+    sequences = pro.all_sequences("magnet")
+
+    assert_equal("magn", sequences.first)
+    assert_equal("gnet", sequences.last)
   end
 
   def test_get_words_from_file
     pro = Processor.new("dictionary.txt", "sequence_list.txt")
-    words = pro.get_words_from_file "dictionary.txt"
 
-    assert_instance_of Array, words
-    assert_equal words, words.grep(String)
-    assert_equal 25_143, words.count
+    words = pro.get_words_from_file("dictionary.txt")
+
+    assert_instance_of(Array, words)
+    assert_equal(words, words.grep(String))
+    assert_equal(25_143, words.count)
     assert_no_match(/\s/, words.join)
     assert_nil words.detect{ |w| w.length == 0 }
   end
 
-  # def test_select_unique_sequences
-  #   pro = Processor.new("dictionary.txt", "sequence_list.txt")
-  #
-  #   pro.pairs_hash = list
-  #
-  #   list = {"arro" => ["arrow", "carrot"], "mike" => ["bron"]}
-  #
-  #   uniques = pro.select_unique_sequences
-  #   assert_equal {"mike" => ["bron"]}, uniques
+  def test_create_sequence_word_pairs
+    pro = Processor.new("dictionary.txt", "sequence_list.txt")
 
-    # list2 = ['aaaa', 'bbbb', 'cccc']
-  #   # duplicates2 = pro.select_unique_sequences list2
-  #   # assert_equal [], duplicates2
-  # end
+    pro.create_sequence_word_pairs
 
-  # def test_create_sequence_word_pairs
-  #   pro = Processor.new("dictionary.txt", "sequence_list.txt")
-  #
-  #   assert_equal [], pro.create_sequence_word_pairs([])
-  #
-  #   pair = ["trump", "hair"]
-  #   pair2 = [["trum", "trump"], ["rump", "trump"], ["hair", "hair"]]
-  #
-  #   assert_equal pair2, pro.create_sequence_word_pairs(pair)
-  # end
-  #
-  # def test_create_list
-  #   pro = Processor.new("dictionary.txt", "sequence_list.txt")
-  #
-  #   assert_equal [], pro.create_list([])
-  #
-  #   pairs = [["carr", "carrots"], ["arro", "arrows"], ["arro", "carrots"], ["give", "give"]]
-  #   sanitized_pair = [["carr", "carrots"], ["give", "give"]]
-  #   assert_equal sanitized_pair, pro.create_list(pairs)
-  # end
+    assert_kind_of(Hash, pro.pairs_hash)
 
+    pro.pairs_hash.each { |sequence, word_array| assert_kind_of String, sequence }
+    pro.pairs_hash.each { |sequence, word_array| assert_kind_of Array, word_array }
+    pro.pairs_hash.each { |sequence, word_array| assert_operator word_array.length, :>=, 1 }
+  end
+
+  def test_alphabetize_pairs_by_sequence
+    pro = Processor.new("dictionary.txt", "sequence_list.txt")
+
+    pro.create_sequence_word_pairs
+    pro.select_unique_sequences
+    pro.alphabetize_pairs_by_sequence
+
+    assert_kind_of(Array, pro.pairs_array)
+
+    pro.pairs_array.each { |sequence_word_pair| assert_kind_of Array, sequence_word_pair }
+    pro.pairs_array.each { |sequence_word_pair| assert_equal 2, sequence_word_pair.length }
+  end
 end
