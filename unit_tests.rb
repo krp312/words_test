@@ -30,6 +30,22 @@ class TestProcessor < Test::Unit::TestCase
   def test_create_sequence_word_pairs
     pro = Processor.new("dictionary.txt", "sequence_list.txt")
 
+    pro.instance_variable_set(:@dictionary, ["the", "12th", "Zorro", "morrow"])
+    pro.create_sequence_word_pairs
+
+    pairs_hash_with_one_duplicate = {
+      "12th" => ["12th"],
+      "Zorr" => ["Zorro"],
+      "orro" => ["Zorro", "morrow"],
+      "morr" => ["morrow"],
+      "rrow" => ["morrow"]
+    }
+
+    assert_equal pairs_hash_with_one_duplicate, pro.pairs_hash
+
+    # I'm concerned the testing below may be overdoing it.
+    pro = Processor.new("dictionary.txt", "sequence_list.txt")
+
     pro.create_sequence_word_pairs
 
     assert_kind_of(Hash, pro.pairs_hash)
@@ -41,7 +57,39 @@ class TestProcessor < Test::Unit::TestCase
     end
   end
 
+  def test_select_unique_sequences
+    pro = Processor.new("dictionary.txt", "sequence_list.txt")
+
+    pro.instance_variable_set(:@pairs_hash, {"orro" => ["Zorro", "morrow"], "fall" => ["fallout"]})
+
+    assert_equal({"fall" => ["fallout"]}, pro.select_unique_sequences)
+
+    # This as well, possibly overdoing it.
+    pro = Processor.new("dictionary.txt", "sequence_list.txt")
+
+    pro.create_sequence_word_pairs
+    pro.select_unique_sequences
+
+    assert_kind_of(Hash, pro.pairs_hash)
+
+    pro.pairs_hash.each do |sequence, word_array|
+      assert_kind_of String, sequence
+      assert_kind_of Array, word_array
+      assert_equal 1, word_array.length
+    end
+  end
+
   def test_alphabetize_pairs_by_sequence
+    pro = Processor.new("dictionary.txt", "sequence_list.txt")
+
+    unordered_hash = {"Simo" => ["under"], "beef"=> ["made"], "12th" => ["damsel"], "'eli" => ["brute"]}
+    ordered_array = [["'eli", "brute"], ["12th", "damsel"], ["beef", "made"], ["Simo", "under"]]
+
+    pro.instance_variable_set(:@pairs_hash, unordered_hash)
+
+    assert_equal ordered_array, pro.alphabetize_pairs_by_sequence
+
+    # And lastly this may be overdoing it.
     pro = Processor.new("dictionary.txt", "sequence_list.txt")
 
     pro.create_sequence_word_pairs

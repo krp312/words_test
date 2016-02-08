@@ -1,5 +1,4 @@
 class Processor
-
   attr_reader :pairs_hash
   attr_reader :pairs_array
 
@@ -35,38 +34,26 @@ class Processor
   end
 
   def select_unique_sequences
-    @pairs_hash.select do |sequence, duplicate_words_array|
+    @pairs_hash.select! do |sequence, duplicate_words_array|
       duplicate_words_array.length == 1
     end
   end
 
   def alphabetize_pairs_by_sequence
-    @pairs_hash = select_unique_sequences.map { |sequence, word| [sequence, word.first] }
-    @pairs_array = @pairs_hash.sort_by { |sequence, word| sequence.downcase }
+    @pairs_array = @pairs_hash.map { |sequence, word| [sequence, word.first] }
+    @pairs_array.sort_by! { |sequence, word| sequence.downcase }
   end
 
   def output_to_file
     File.open @output_filename, "w" do |csv|
-      @pairs_array.each do |pairing|
-        sequence = pairing[0]
-        word = pairing[1]
-        output_line = formatter(sequence, word)
-        csv.puts(output_line)
+      csv.puts("'sequences'   'words'\n\n")
+      @pairs_array.each do |sequence_word_pair|
+        csv.puts([sequence_word_pair[0], sequence_word_pair[1]].join('           '))
       end
     end
   end
 
   def get_words_from_file(input_filename)
     File.read(input_filename).strip.split
-  end
-
-  private
-
-  def formatter(sequence, word)
-    [quote_string(sequence), quote_string(word)].join '   '
-  end
-
-  def quote_string(s)
-    '' + s + ''
   end
 end
