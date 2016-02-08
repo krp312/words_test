@@ -43,7 +43,7 @@ class TestProcessor < Test::Unit::TestCase
 
     assert_equal pairs_hash_with_one_duplicate, pro.pairs_hash
 
-    # I'm concerned the testing below may be overdoing it.
+    # I'm concerned lines 47-57 might be overdoing it.
     pro = Processor.new("dictionary.txt", "sequence_list.txt")
 
     pro.create_sequence_word_pairs
@@ -64,7 +64,7 @@ class TestProcessor < Test::Unit::TestCase
 
     assert_equal({"fall" => ["fallout"]}, pro.select_unique_sequences)
 
-    # This as well, possibly overdoing it.
+    # This as well, possibly overdoing it, lines 68-79.
     pro = Processor.new("dictionary.txt", "sequence_list.txt")
 
     pro.create_sequence_word_pairs
@@ -89,7 +89,7 @@ class TestProcessor < Test::Unit::TestCase
 
     assert_equal ordered_array, pro.alphabetize_pairs_by_sequence
 
-    # And lastly this may be overdoing it.
+    # And lastly lines 93-107.
     pro = Processor.new("dictionary.txt", "sequence_list.txt")
 
     pro.create_sequence_word_pairs
